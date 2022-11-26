@@ -13,10 +13,9 @@ const { post } = require(".");
 // SIGNUP ROOTS
 router.get("/test", (req, res) => {
   res.json({
-    message:'Bienvenue BG'
-  })
-
-})
+    message: "Bienvenue BG",
+  });
+});
 router.post("/signup", (req, res) => {
   if (!checkBody(req.body, ["firstname", "username", "password"])) {
     res.json({ result: false, message: "Remplissez tous vos champs" });
@@ -27,7 +26,6 @@ router.post("/signup", (req, res) => {
   User.findOne({ username: req.body.username }).then((data) => {
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.password, 10);
-
       const newUser = new User({
         firstname: req.body.firstname,
         username: req.body.username,
@@ -36,7 +34,11 @@ router.post("/signup", (req, res) => {
       });
 
       newUser.save().then(() => {
-        res.json({message:'Inscription effectuée', result: true, user: newUser });
+        res.json({
+          message: "Inscription effectuée",
+          result: true,
+          user: newUser,
+        });
       });
     } else {
       res.json({ result: false, message: "L'utilisateur existe déja" });
@@ -51,12 +53,12 @@ router.post("/signin", (req, res) => {
   }
   User.findOne({ username: req.body.username }).then((data) => {
     if (data == null) {
-      res.json({ result: false , message:'Utilisateur non trouvé'});
+      res.json({ result: false, message: "Utilisateur non trouvé" });
     } else {
       if (bcrypt.compareSync(req.body.password, data.password)) {
-        res.json({ result: true, user: data  , message:'Connexion réussie'});
+        res.json({ result: true, user: data, message: "Connexion réussie" });
       } else {
-        res.json({ result: false,message:'Mot de passe incorrect' });
+        res.json({ result: false, message: "Mot de passe incorrect" });
       }
     }
   });
@@ -82,9 +84,7 @@ router.post("/tweets", (req, res) => {
       firstname: req.body.firstname,
       username: req.body.username,
       content: req.body.content,
-
     });
-
 
     newTweet.save().then(() => {
       res.json({ result: true, tweet: newTweet });
@@ -98,8 +98,6 @@ router.post("/tweets", (req, res) => {
 });
 
 // DISPLAY ALL TWEETS WITH HASHTAGS
-
-
 
 router.get("/tweets", (req, res) => {
   Tweet.find({}, function (err, data) {
@@ -133,19 +131,20 @@ router.get("http://localhost:3000/users/tweets/:hashtags", (req, res) => {
 
 // DELETE TWEET ROOTS
 
-// router.delete("/tweets/delete", (req, res) => {
+router.delete("/tweets/delete", (req, res) => {
 
-//   Tweet.findOneAndDelete({_id:req.body.id}).then((data) => {
+  Tweet.findOneAndDelete({_id:req.body.id}).then((data) => {
 
-//     if(data){
-//       res.json(data)
-//     }else{
-//       res.json("rien")
-//     }
+    if(data){
+      res.json(data)
+    }else{
+      res.json("rien")
+    }
 
-//   })
+  })
 
-//Router to find a tweet by Hashtag 
+})
 
+//Router to find a tweet by Hashtag
 
 module.exports = router;
