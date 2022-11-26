@@ -11,7 +11,12 @@ const { Router } = require("express");
 const { post } = require(".");
 
 // SIGNUP ROOTS
+router.get("/test", (req, res) => {
+  res.json({
+    message:'Bienvenue BG'
+  })
 
+})
 router.post("/signup", (req, res) => {
   if (!checkBody(req.body, ["firstname", "username", "password"])) {
     res.json({ result: false, message: "Remplissez tous vos champs" });
