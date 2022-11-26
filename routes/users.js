@@ -131,19 +131,31 @@ router.get("http://localhost:3000/users/tweets/:hashtags", (req, res) => {
 
 // DELETE TWEET ROOTS
 
-router.delete("/tweets/delete", (req, res) => {
+// router.delete("/tweets/delete/:idTweet", (req, res) => {
 
-  Tweet.findOneAndDelete({_id:req.body.id}).then((data) => {
+//   Tweet.findOneAndDelete({_id:req.params.idTweet}).then((data) => {
 
-    if(data){
-      res.json(data)
-    }else{
-      res.json("rien")
+//     if(data){
+//       res.json(data)
+//     }else{
+//       res.json("rien")
+//     }
+
+//   })
+
+// })
+
+//router delete tweet
+
+router.delete("/tweets/delete/:idTweet", (req, res) => {
+  Tweet.findOneAndDelete({ _id: req.params.idTweet }).then((data) => {
+    if (data) {
+      res.json(data);
+    } else {
+      res.json("rien");
     }
-
-  })
-
-})
+  });
+});
 
 //Router to find a tweet by Hashtag
 
