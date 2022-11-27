@@ -84,11 +84,12 @@ router.post("/tweets", (req, res) => {
 
     if(req.body.content.match(regexHashTag)){
         let hashtag = req.body.content.match(regexHashTag)[0];
+        hashtag = hashtag.replace("#", "")
         const newTweet = new Tweet({
           firstname: req.body.firstname,
           username: req.body.username,
           content: req.body.content,
-          hashtag: hashtag,
+          hashtag: hashtag
 
         })
         newTweet.save().then(() => {
@@ -134,7 +135,9 @@ router.post("/tweets", (req, res) => {
 
 
 router.get("/tweets/hashtag/:hashtag", (req, res) => {
-  Tweet.find({ hashtag: req.params.hashtag }).then((data) => {
+  let hashtag = req.params.hashtag;
+
+  Tweet.find({ hashtag: hashtag }).then((data) => {
 
     if(data.length > 0){
       res.json({ result: true, tweets: data });
@@ -184,23 +187,7 @@ router.post("/tweets/:id/like", (req, res) => {
     }
   });
 });
-// DELETE TWEET ROOTS
 
-// router.delete("/tweets/delete/:idTweet", (req, res) => {
-
-//   Tweet.findOneAndDelete({_id:req.params.idTweet}).then((data) => {
-
-//     if(data){
-//       res.json(data)
-//     }else{
-//       res.json("rien")
-//     }
-
-//   })
-
-// })
-
-//router delete tweet
 
 router.delete("/tweets/delete/:idTweet", (req, res) => {
   Tweet.findOneAndDelete({ _id: req.params.idTweet }).then((data) => {
@@ -215,9 +202,6 @@ router.delete("/tweets/delete/:idTweet", (req, res) => {
   });
 });
 
-//Router to find a tweet by Hashtag//
-
-//router to delete all tweets
 
 router.delete("/alltweets/delete", (req, res) => {
   Tweet.deleteMany().then((data) => {
