@@ -133,9 +133,15 @@ router.post("/tweets", (req, res) => {
 //router to find tweet by hashtag
 
 
-router.get("/tweets/:hashtag", (req, res) => {
+router.get("/tweets/hashtag/:hashtag", (req, res) => {
   Tweet.find({ hashtag: req.params.hashtag }).then((data) => {
-    res.json({ result: true, tweets: data });
+
+    if(data.length > 0){
+      res.json({ result: true, tweets: data });
+    }else{
+      res.json({ result: false, message: "Aucun tweet trouvé" });
+    }
+
   });
 });
 
