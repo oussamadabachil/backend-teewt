@@ -68,7 +68,7 @@ const regexHashTag = /(#+[a-zA-Z0-9(_)]{1,})/;
 
 router.post("/tweets", (req, res) => {
   if (!checkBody(req.body, ["content"])) {
-    res.json({ result: false, error: "Missing or empty fields" });
+    res.json({ result: false, message: "Remplissez tous vos champs !" });
     return;
   }
   if (req.body.content.length < 280) {
@@ -87,12 +87,12 @@ router.post("/tweets", (req, res) => {
     });
 
     newTweet.save().then(() => {
-      res.json({ result: true, tweet: newTweet });
+      res.json({ result: true, tweet: newTweet , message: "Tweet envoyé" });
     });
   } else {
     res.json({
       result: false,
-      message: "hey ",
+      message: "Votre tweet est trop long, il doit faire moins de 280 caractères",
     });
   }
 });
@@ -150,7 +150,10 @@ router.get("http://localhost:3000/users/tweets/:hashtags", (req, res) => {
 router.delete("/tweets/delete/:idTweet", (req, res) => {
   Tweet.findOneAndDelete({ _id: req.params.idTweet }).then((data) => {
     if (data) {
-      res.json(data);
+      res.json({
+        data,
+        result:true,
+      message: "Tweet supprimé",});
     } else {
       res.json("rien");
     }
