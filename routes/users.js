@@ -100,14 +100,16 @@ router.post("/tweets", (req, res) => {
 // DISPLAY ALL TWEETS WITH HASHTAGS
 
 router.get("/tweets", (req, res) => {
-  Tweet.find({}, function (err, data) {
+  Tweet.find({}).then((data) => {
     if (data) {
       res.json({
         allTweet: data,
+        result:true,
       });
-    } else if (err) {
+    } else{
       res.json({
-        azz: "oussama",
+        message: "oussama",
+        result: false,
       });
     }
   });
@@ -129,6 +131,25 @@ router.get("http://localhost:3000/users/tweets/:hashtags", (req, res) => {
   });
 });
 
+
+//Like and dislike
+
+router.post("/tweets/:id/like", (req, res) => {
+  Tweet.findOne({ _id: req.params.id }).then((data) => {
+    if (data == null) {
+      res.json({ result: false, message: "Tweet non trouvé" });
+    } else {
+      if (data.like.includes(req.body.username)) {
+        res.json({ result: false, message: "Vous avez déjà liké ce tweet" });
+      } else {
+        data.like.push(req.body.username);
+        data.save().then(() => {
+          res.json({ result: true, message: "Like ajouté" });
+        });
+      }
+    }
+  });
+});
 // DELETE TWEET ROOTS
 
 // router.delete("/tweets/delete/:idTweet", (req, res) => {
@@ -160,6 +181,25 @@ router.delete("/tweets/delete/:idTweet", (req, res) => {
   });
 });
 
-//Router to find a tweet by Hashtag
+//Router to find a tweet by Hashtag//
+
+//router to delete all tweets
+
+router.delete("/alltweets/delete", (req, res) => {
+  Tweet.deleteMany().then((data) => {
+    if (data) {
+      res.json({
+        data,
+        result:true,
+      message: "Tous les tweets ont été supprimés",});
+    } else {
+      res.json({
+        result:false,
+
+      })
+    }
+  });
+});
+
 
 module.exports = router;
