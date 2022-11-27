@@ -80,22 +80,65 @@ router.post("/tweets", (req, res) => {
     let minute = date.getMinutes();
     let second = date.getSeconds();
     let time = `${day}/${month}/${year} ${hour}:${minute}:${second}`;
-    const newTweet = new Tweet({
-      firstname: req.body.firstname,
-      username: req.body.username,
-      content: req.body.content,
-    });
 
-    newTweet.save().then(() => {
-      res.json({ result: true, tweet: newTweet , message: "Tweet envoyé" });
-    });
-  } else {
+
+    if(req.body.content.match(regexHashTag)){
+        let hashtag = req.body.content.match(regexHashTag)[0];
+        const newTweet = new Tweet({
+          firstname: req.body.firstname,
+          username: req.body.username,
+          content: req.body.content,
+          hashtag: hashtag,
+
+        })
+        newTweet.save().then(() => {
+          res.json({
+            message: "Tweet envoyé",
+            result: true,
+            tweet: newTweet,
+            });
+        });
+
+
+    }else{
+        let hashtag = null;
+        const newTweet = new Tweet({
+          firstname: req.body.firstname,
+          username: req.body.username,
+          content: req.body.content,
+          hashtag: hashtag,
+        
+        })
+        newTweet.save().then(() => {
+          res.json({
+            message: "Tweet envoyé",
+            result: true,
+            tweet: newTweet,
+            });
+        })
+      }
+    } else {
     res.json({
       result: false,
       message: "Votre tweet est trop long, il doit faire moins de 280 caractères",
     });
   }
 });
+
+//fais un get pour recuperer les tweets par hashtag
+
+
+
+
+//router to find tweet by hashtag
+
+
+router.get("/tweets/:hashtag", (req, res) => {
+  Tweet.find({ hashtag: req.params.hashtag }).then((data) => {
+    res.json({ result: true, tweets: data });
+  });
+});
+
 
 // DISPLAY ALL TWEETS WITH HASHTAGS
 
@@ -116,21 +159,6 @@ router.get("/tweets", (req, res) => {
 });
 
 // SEARCH HASHTAG ROOTS
-
-router.get("http://localhost:3000/users/tweets/:hashtags", (req, res) => {
-  Tweet.find({ hashtag: req.params.hashtags }, function (err, data) {
-    if (data) {
-      res.json({
-        allTweet: data.sort(),
-      });
-    } else if (err) {
-      res.json({
-        azz: "oussama",
-      });
-    }
-  });
-});
-
 
 //Like and dislike
 
