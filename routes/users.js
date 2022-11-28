@@ -56,7 +56,7 @@ router.get("/connected", (req, res) => {
 
 router.post("/signin", (req, res) => {
   if (!checkBody(req.body, ["username", "password"])) {
-    res.json({ result: false, message: "Remplissez tous les champs !" });
+    res.json({ result: false, message: "Remplissez tous vos champs 😑" });
     return;
   }
   User.findOne({ username: req.body.username }).then((data) => {
