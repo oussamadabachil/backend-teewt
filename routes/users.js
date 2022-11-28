@@ -31,6 +31,7 @@ router.post("/signup", (req, res) => {
         username: req.body.username,
         password: hash,
         token: uid2(32),
+        image: req.body.image,
       });
 
       newUser.save().then(() => {
@@ -43,6 +44,13 @@ router.post("/signup", (req, res) => {
     } else {
       res.json({ result: false, message: "L'utilisateur existe déja" });
     }
+  });
+});
+
+//How many poeples are connected
+router.get("/connected", (req, res) => {
+  User.find().then((data) => {
+    res.json({ result: true, data: data });
   });
 });
 
